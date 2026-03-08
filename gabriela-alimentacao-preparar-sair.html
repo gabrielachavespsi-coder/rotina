@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alimentação e Preparar para Sair</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;font-family:'Poppins',sans-serif;background:#f2f1ee;}
+body{display:flex;justify-content:center;}
+.pagina{width:100%;max-width:420px;min-height:100vh;padding:14px;box-sizing:border-box;}
+.topo{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.botao-voltar{border:none;background:#e9e8e4;border-radius:14px;padding:8px 14px;font-size:15px;font-family:'Poppins',sans-serif;cursor:pointer;}
+.titulo{display:flex;align-items:center;gap:10px;font-size:19px;color:#3e6b5c;font-weight:400;}
+.caixa-grande{background:#f7f6f3;border-radius:22px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+.lista{display:flex;flex-direction:column;gap:12px;}
+.tarefa{background:#ffffff;border:none;border-radius:18px;padding:16px;display:grid;grid-template-columns:40px 1fr 60px;align-items:center;box-shadow:0 4px 10px rgba(0,0,0,0.06);cursor:pointer;font-family:'Poppins',sans-serif;}
+.tarefa.feita{opacity:0.55;}
+.check{font-size:16px;visibility:hidden;}
+.tarefa.feita .check{visibility:visible;}
+.nome{text-align:center;font-size:15px;color:#6c757d;}
+.hora{text-align:right;font-size:12px;color:#b0b0b0;}
+.info{margin-top:20px;background:#efefec;border-radius:18px;padding:18px 16px 20px;text-align:center;}
+.info-titulo{font-size:13px;font-weight:400;color:#5a4635;margin-bottom:4px;line-height:1.4;}
+.info-data,.info-ultima{font-size:12px;color:#8c7a6a;line-height:1.4;}
+.info-ultima{margin-bottom:10px;}
+.info-flores{font-size:18px;line-height:1.2;margin-bottom:8px;word-spacing:2px;}
+.info-texto{font-size:12px;color:#8c7a6a;line-height:1.5;margin:0;}
+.info-texto-final{font-size:11px;color:#7a5f4d;line-height:1.5;margin-top:12px;}
+</style>
+</head>
+<body>
+<div class="pagina">
+  <div class="topo">
+    <button class="botao-voltar" onclick="window.location.href='gabriela-menu.html'">← Voltar</button>
+    <div class="titulo">🍴 Alimentação e Preparar para Sair</div>
+  </div>
+
+  <div class="caixa-grande">
+    <div class="lista" id="lista-tarefas"></div>
+
+    <div class="info">
+      <div class="info-titulo" id="contador">Jardim do bloco • 0/7 concluídas</div>
+      <div class="info-data" id="data-bloco"></div>
+      <div class="info-ultima" id="ultima">Última marcação: --</div>
+      <div class="info-flores" id="jardim"></div>
+      <div class="info-texto">Um jardim para o que alimenta o corpo e organiza a saída.</div>
+      <div class="info-texto-final">O bloco vai das 09h às 11h.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const tarefasBloco = [
+{ nome:"🥘 Preparar almoço", hora:"09h" },
+{ nome:"🥪 Preparar lanche da tarde e da escola", hora:"09h" },
+{ nome:"🥗 Preparar jantar", hora:"09h" },
+{ nome:"🍲 Preparar ceia", hora:"09h" },
+{ nome:"🚿 Tomar banho", hora:"11h" },
+{ nome:"🍴 Almoçar", hora:"11h" },
+{ nome:"🪥 Escovar os dentes", hora:"11h" }
+];
+const chaveBase = "gabriela_alimentacao_preparar_sair";
+function chaveDoDia(){ const h=new Date(); return `${chaveBase}_${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,"0")}-${String(h.getDate()).padStart(2,"0")}`; }
+function chaveUltimaMarcacao(){ const h=new Date(); return `${chaveBase}_ultima_${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,"0")}-${String(h.getDate()).padStart(2,"0")}`; }
+function obterEstado(){ const s=localStorage.getItem(chaveDoDia()); if(s) return JSON.parse(s); const e=tarefasBloco.map(()=>false); localStorage.setItem(chaveDoDia(), JSON.stringify(e)); return e; }
+function salvarEstado(e){ localStorage.setItem(chaveDoDia(), JSON.stringify(e)); }
+function salvarUltimaMarcacao(t){ localStorage.setItem(chaveUltimaMarcacao(), t); }
+function obterUltimaMarcacao(){ return localStorage.getItem(chaveUltimaMarcacao()) || "--"; }
+function formatarDataHoje(){ const h=new Date(); return `${String(h.getDate()).padStart(2,"0")}/${String(h.getMonth()+1).padStart(2,"0")}/${h.getFullYear()}`; }
+function atualizarJardim(c,t){ let j=""; for(let i=0;i<t;i++){ j += i<c ? "🌸 " : "🌱 "; } document.getElementById("jardim").innerText=j.trim(); }
+function atualizarResumo(){ const e=obterEstado(); const c=e.filter(Boolean).length; document.getElementById("contador").innerText=`Jardim do bloco • ${c}/${tarefasBloco.length} concluídas`; document.getElementById("ultima").innerText=`Última marcação: ${obterUltimaMarcacao()}`; atualizarJardim(c,tarefasBloco.length); }
+function alternarTarefa(i){ const e=obterEstado(); e[i]=!e[i]; salvarEstado(e); const a=new Date(); salvarUltimaMarcacao(`${String(a.getHours()).padStart(2,"0")}:${String(a.getMinutes()).padStart(2,"0")}`); renderizarTarefas(); atualizarResumo(); }
+function renderizarTarefas(){ const lista=document.getElementById("lista-tarefas"); const e=obterEstado(); lista.innerHTML=""; tarefasBloco.forEach((t,i)=>{ const b=document.createElement("button"); b.className="tarefa"+(e[i]?" feita":""); b.onclick=()=>alternarTarefa(i); b.innerHTML=`<span class="check">🌸</span><span class="nome">${t.nome}</span><span class="hora">${t.hora}</span>`; lista.appendChild(b); }); }
+function iniciarTela(){ document.getElementById("data-bloco").innerText=`Dia do bloco: ${formatarDataHoje()}`; renderizarTarefas(); atualizarResumo(); }
+window.addEventListener("load", iniciarTela);
+</script>
+</body>
+</html>

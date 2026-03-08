@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu Gabriela</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+html,body{
+margin:0;
+padding:0;
+height:100%;
+font-family:'Poppins',sans-serif;
+background:#f2f1ee;
+}
+
+body{
+display:flex;
+justify-content:center;
+}
+
+.container{
+width:100%;
+max-width:420px;
+padding:16px;
+box-sizing:border-box;
+}
+
+.topo{
+display:flex;
+align-items:center;
+gap:12px;
+margin-bottom:20px;
+}
+
+.botao-voltar{
+border:none;
+background:#e9e8e4;
+border-radius:14px;
+padding:8px 14px;
+font-size:15px;
+font-family:'Poppins',sans-serif;
+cursor:pointer;
+}
+
+.titulo{
+font-size:22px;
+color:#3e6b5c;
+}
+
+.botao{
+display:block;
+width:100%;
+background:#f7f6f3;
+border:none;
+border-radius:22px;
+padding:18px 16px;
+margin-bottom:14px;
+box-shadow:0 4px 12px rgba(0,0,0,0.05);
+cursor:pointer;
+font-family:'Poppins',sans-serif;
+}
+
+.nome-botao{
+font-size:17px;
+color:#5a4635;
+text-align:center;
+}
+
+.alerta{
+margin-top:8px;
+font-size:12px;
+color:#8c7a6a;
+text-align:center;
+line-height:1.4;
+min-height:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="topo">
+<button class="botao-voltar" onclick="window.location.href='index.html'">← Voltar</button>
+<div class="titulo">🌸 Gabriela</div>
+</div>
+
+<button class="botao" onclick="window.location.href='gabriela-autocuidado-movimento-silencio.html'">
+<div class="nome-botao">🌿 Autocuidado, Movimento e Silêncio</div>
+<div id="alerta-bloco1" class="alerta"></div>
+</button>
+
+<button class="botao" onclick="window.location.href='gabriela-manifestacao-criatividade.html'">
+<div class="nome-botao">💫 Manifestação e Criatividade</div>
+<div id="alerta-bloco2" class="alerta"></div>
+</button>
+
+<button class="botao" onclick="window.location.href='gabriela-rotina-maya.html'">
+<div class="nome-botao">🌼 Rotina da Maya</div>
+<div id="alerta-bloco3" class="alerta"></div>
+</button>
+
+<button class="botao" onclick="window.location.href='gabriela-alimentacao-preparar-sair.html'">
+<div class="nome-botao">🍴 Alimentação e Preparar para Sair</div>
+<div id="alerta-bloco4" class="alerta"></div>
+</button>
+
+<button class="botao" onclick="window.location.href='gabriela-estudo-organizacao-casa-dia.html'">
+<div class="nome-botao">📚 Estudo, Organização da Casa e do Dia</div>
+<div id="alerta-bloco6" class="alerta"></div>
+</button>
+
+<button class="botao" onclick="window.location.href='gabriela-desacelerar-autocuidado.html'">
+<div class="nome-botao">🌙 Desacelerar e Autocuidado</div>
+<div id="alerta-bloco7" class="alerta"></div>
+</button>
+
+<button class="botao" onclick="window.location.href='gabriela-passatempos-relaxantes.html'">
+<div class="nome-botao">🃏 Passatempos Relaxantes</div>
+<div id="alerta-bloco8" class="alerta"></div>
+</button>
+
+</div>
+
+<script>
+function dataHoje(){
+const hoje = new Date();
+const ano = hoje.getFullYear();
+const mes = String(hoje.getMonth()+1).padStart(2,"0");
+const dia = String(hoje.getDate()).padStart(2,"0");
+return `${ano}-${mes}-${dia}`;
+}
+
+function obterEstado(chaveBase){
+const chave = `${chaveBase}_${dataHoje()}`;
+const salvo = localStorage.getItem(chave);
+if(!salvo){
+return null;
+}
+return JSON.parse(salvo);
+}
+
+function diaSemanaHoje(){
+return String(new Date().getDay());
+}
+
+function tarefasVisiveisBloco1(){
+const hoje = diaSemanaHoje();
+const todas = [
+{nome:"🤸‍♀️ Movimentar o corpo na cama",hora:"05h"},
+{nome:"🚽 Fazer xixi",hora:"05h"},
+{nome:"👅 Raspar língua",hora:"05h"},
+{nome:"🪥 Escovar os dentes",hora:"05h"},
+{nome:"🚿 Lavar o rosto",hora:"05h"},
+{nome:"🥛🍋 Copo d'água morna com limão",hora:"05h"},
+{nome:"💊 Remédio tireoide",hora:"05h"},
+{nome:"🪟🌿 Abrir a janela e ouvir a natureza",hora:"05h"},
+{nome:"🚶 Caminhada de 10 a 20 min",hora:"05h30m"},
+{nome:"💪 Calistenia de 10 a 30 min",hora:"05h30m"},
+{nome:"🙏☀️ Yoga 3 rondas Saudação ao Sol",hora:"05h30m", dias:["2","4"]},
+{nome:"🧘 Kriya / meditação",hora:"06h"},
+{nome:"🚿 Banho",hora:"06h"}
+];
+return todas.filter(t => !t.dias || t.dias.includes(hoje));
+}
+
+function tarefasBloco2(){
+const hoje = new Date();
+const inicio = new Date(2026, 2, 7);
+const diff = Math.floor((hoje - inicio) / (1000*60*60*24));
+const primeira = diff % 2 === 0 ? "📝 Escrita criativa" : "📘 Escrever o livro";
+
+return [
+{nome:primeira,hora:"07h"},
+{nome:"📖 Leitura",hora:"07h"},
+{nome:"💬 Afirmações do dia",hora:"07h"},
+{nome:"🌈 Visualização",hora:"07h"},
+{nome:"🎨 Criação artística, projetos e sonhos",hora:"07h"}
+];
+}
+
+const tarefasBloco3 = [
+{nome:"🌼 Rotina da Maya Manhã",hora:"09h"},
+{nome:"🌼 Rotina da Maya Tarde",hora:"18h30m"}
+];
+
+const tarefasBloco4 = [
+{nome:"🥘 Preparar almoço",hora:"09h"},
+{nome:"🥪 Preparar lanche da tarde e da escola",hora:"09h"},
+{nome:"🥗 Preparar jantar",hora:"09h"},
+{nome:"🍲 Preparar ceia",hora:"09h"},
+{nome:"🚿 Tomar banho",hora:"11h"},
+{nome:"🍴 Almoçar",hora:"11h"},
+{nome:"🪥 Escovar os dentes",hora:"11h"}
+];
+
+const tarefasBloco6 = [
+{nome:"📚 Estudar",hora:"18h30m"},
+{nome:"🏚️ Arrumar a sala, quarto e cantinho",hora:"19h30m"},
+{nome:"👘 Tirar roupa do varal, dobrar e guardar",hora:"19h30m"},
+{nome:"🗑️ Tirar o lixo",hora:"19h30m"},
+{nome:"🍽️ Limpar louça da pia",hora:"19h30m"},
+{nome:"🪴 Molhar plantas",hora:"19h30m"},
+{nome:"🧊 Água no congelador",hora:"19h30m"},
+{nome:"🎒 Arrumar roupa, bolsa ou mochila do dia seguinte",hora:"19h30m"},
+{nome:"🧺 Organizar tarefas leves da casa",hora:"19h30m"}
+];
+
+const tarefasBloco7 = [
+{nome:"🎶 Música relaxante",hora:"20h"},
+{nome:"💧 Beber água",hora:"20h"},
+{nome:"🕯️ Desligar luzes brancas e notebook",hora:"20h"},
+{nome:"🦶 Massagem com óleo de gergelim",hora:"20h"},
+{nome:"🚿 Tomar banho morno",hora:"20h"},
+{nome:"🪥 Escovar os dentes",hora:"20h"},
+{nome:"👅 Raspar a língua",hora:"20h"},
+{nome:"📱 Desligar celular, TV e tablet",hora:"20h"},
+{nome:"🍲 Ceia da noite",hora:"20h"}
+];
+
+const tarefasBloco8 = [
+{nome:"🃏 Passatempos relaxantes",hora:"20h30m"}
+];
+
+function atualizarBotao(id, chaveBase, tarefas){
+const alerta = document.getElementById(id);
+const estado = obterEstado(chaveBase);
+
+if(!tarefas || tarefas.length === 0){
+alerta.innerText = "";
+return;
+}
+
+if(!estado){
+alerta.innerText = `${tarefas[0].hora} • ${tarefas[0].nome}`;
+return;
+}
+
+const indice = estado.findIndex(t => t === false);
+
+if(indice === -1){
+alerta.innerText = "Tudo concluído hoje 🌸";
+return;
+}
+
+if(!tarefas[indice]){
+alerta.innerText = "Abra o bloco para atualizar 🌸";
+return;
+}
+
+const proxima = tarefas[indice];
+alerta.innerText = `${proxima.hora} • ${proxima.nome}`;
+}
+
+function atualizarMenu(){
+atualizarBotao("alerta-bloco1","gabriela_autocuidado_movimento_silencio",tarefasVisiveisBloco1());
+atualizarBotao("alerta-bloco2","gabriela_manifestacao_criatividade",tarefasBloco2());
+atualizarBotao("alerta-bloco3","gabriela_rotina_maya",tarefasBloco3);
+atualizarBotao("alerta-bloco4","gabriela_alimentacao_preparar_sair",tarefasBloco4);
+atualizarBotao("alerta-bloco6","gabriela_estudo_organizacao_casa_dia",tarefasBloco6);
+atualizarBotao("alerta-bloco7","gabriela_desacelerar_autocuidado",tarefasBloco7);
+atualizarBotao("alerta-bloco8","gabriela_passatempos_relaxantes",tarefasBloco8);
+}
+
+window.addEventListener("load", atualizarMenu);
+window.addEventListener("pageshow", atualizarMenu);
+</script>
+
+</body>
+</html>
