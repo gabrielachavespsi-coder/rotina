@@ -171,8 +171,14 @@ background:#ffeef6;
 window.addEventListener("load", function() {
   setTimeout(function() {
     document.getElementById("splash-screen").classList.add("hide");
-  }, 1800);
+  }, 3200);
 });
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./service-worker.js");
+  });
+}
 </script>
 
 </body>
