@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manifestação e Criatividade</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;font-family:'Poppins',sans-serif;background:#f2f1ee;}
+body{display:flex;justify-content:center;}
+.pagina{width:100%;max-width:420px;min-height:100vh;padding:14px;box-sizing:border-box;}
+.topo{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.botao-voltar{border:none;background:#e9e8e4;border-radius:14px;padding:8px 14px;font-size:15px;font-family:'Poppins',sans-serif;cursor:pointer;}
+.titulo{display:flex;align-items:center;gap:10px;font-size:19px;color:#3e6b5c;font-weight:400;}
+.caixa-grande{background:#f7f6f3;border-radius:22px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+.lista{display:flex;flex-direction:column;gap:12px;}
+.tarefa{background:#ffffff;border:none;border-radius:18px;padding:16px;display:grid;grid-template-columns:40px 1fr 60px;align-items:center;box-shadow:0 4px 10px rgba(0,0,0,0.06);cursor:pointer;font-family:'Poppins',sans-serif;}
+.tarefa.feita{opacity:0.55;}
+.check{font-size:16px;visibility:hidden;}
+.tarefa.feita .check{visibility:visible;}
+.nome{text-align:center;font-size:15px;color:#6c757d;}
+.hora{text-align:right;font-size:12px;color:#b0b0b0;}
+.info{margin-top:20px;background:#efefec;border-radius:18px;padding:18px 16px 20px;text-align:center;}
+.info-titulo{font-size:13px;font-weight:400;color:#5a4635;margin-bottom:4px;line-height:1.4;}
+.info-data,.info-ultima{font-size:12px;color:#8c7a6a;line-height:1.4;}
+.info-ultima{margin-bottom:10px;}
+.info-flores{font-size:18px;line-height:1.2;margin-bottom:8px;word-spacing:2px;}
+.info-texto{font-size:12px;color:#8c7a6a;line-height:1.5;margin:0;}
+.info-texto-final{font-size:11px;color:#7a5f4d;line-height:1.5;margin-top:12px;}
+</style>
+</head>
+<body>
+<div class="pagina">
+  <div class="topo">
+    <button class="botao-voltar" onclick="window.location.href='gabriela-menu.html'">← Voltar</button>
+    <div class="titulo">💫 Manifestação e Criatividade</div>
+  </div>
+
+  <div class="caixa-grande">
+    <div class="lista" id="lista-tarefas"></div>
+
+    <div class="info">
+      <div class="info-titulo" id="contador">Jardim do bloco • 0/5 concluídas</div>
+      <div class="info-data" id="data-bloco"></div>
+      <div class="info-ultima" id="ultima">Última marcação: --</div>
+      <div class="info-flores" id="jardim"></div>
+      <div class="info-texto">Escrita criativa e livro alternam entre os dias.</div>
+      <div class="info-texto-final">Leitura e afirmações podem abrir telas próprias depois.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const chaveBase = "gabriela_manifestacao_criatividade";
+
+function tarefaEscritaOuLivro(){
+  const hoje = new Date();
+  const inicio = new Date(2026, 2, 7);
+  const diff = Math.floor((hoje - inicio) / (1000*60*60*24));
+  return diff % 2 === 0 ? "📝 Escrita criativa" : "📘 Escrever o livro";
+}
+
+function tarefasBloco(){
+  return [
+    { nome:tarefaEscritaOuLivro(), hora:"07h" },
+    { nome:"📖 Leitura", hora:"07h" },
+    { nome:"💬 Afirmações do dia", hora:"07h" },
+    { nome:"🌈 Visualização", hora:"07h" },
+    { nome:"🎨 Criação artística, projetos e sonhos", hora:"07h" }
+  ];
+}
+
+function chaveDoDia(){
+  const hoje = new Date();
+  return `${chaveBase}_${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,"0")}-${String(hoje.getDate()).padStart(2,"0")}`;
+}
+function chaveUltimaMarcacao(){
+  const hoje = new Date();
+  return `${chaveBase}_ultima_${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,"0")}-${String(hoje.getDate()).padStart(2,"0")}`;
+}
+function obterEstado(){
+  const tarefas = tarefasBloco();
+  const salvo = localStorage.getItem(chaveDoDia());
+  if(salvo){
+    const estado = JSON.parse(salvo);
+    if(estado.length === tarefas.length) return estado;
+  }
+  const estadoInicial = tarefas.map(() => false);
+  localStorage.setItem(chaveDoDia(), JSON.stringify(estadoInicial));
+  return estadoInicial;
+}
+function salvarEstado(estado){ localStorage.setItem(chaveDoDia(), JSON.stringify(estado)); }
+function salvarUltimaMarcacao(texto){ localStorage.setItem(chaveUltimaMarcacao(), texto); }
+function obterUltimaMarcacao(){ return localStorage.getItem(chaveUltimaMarcacao()) || "--"; }
+function formatarDataHoje(){
+  const hoje = new Date();
+  return `${String(hoje.getDate()).padStart(2,"0")}/${String(hoje.getMonth()+1).padStart(2,"0")}/${hoje.getFullYear()}`;
+}
+function atualizarJardim(concluidas,total){
+  let jardim = "";
+  for(let i=0;i<total;i++){ jardim += i < concluidas ? "🌸 " : "🌱 "; }
+  document.getElementById("jardim").innerText = jardim.trim();
+}
+function atualizarResumo(){
+  const estado = obterEstado();
+  const total = tarefasBloco().length;
+  const concluidas = estado.filter(Boolean).length;
+  document.getElementById("contador").innerText = `Jardim do bloco • ${concluidas}/${total} concluídas`;
+  document.getElementById("ultima").innerText = `Última marcação: ${obterUltimaMarcacao()}`;
+  atualizarJardim(concluidas,total);
+}
+function alternarTarefa(indice){
+  const estado = obterEstado();
+  estado[indice] = !estado[indice];
+  salvarEstado(estado);
+  const agora = new Date();
+  salvarUltimaMarcacao(`${String(agora.getHours()).padStart(2,"0")}:${String(agora.getMinutes()).padStart(2,"0")}`);
+  renderizarTarefas();
+  atualizarResumo();
+}
+function renderizarTarefas(){
+  const lista = document.getElementById("lista-tarefas");
+  const tarefas = tarefasBloco();
+  const estado = obterEstado();
+  lista.innerHTML = "";
+  tarefas.forEach((tarefa,indice) => {
+    const botao = document.createElement("button");
+    botao.className = "tarefa" + (estado[indice] ? " feita" : "");
+    botao.onclick = () => alternarTarefa(indice);
+    botao.innerHTML = `<span class="check">🌸</span><span class="nome">${tarefa.nome}</span><span class="hora">${tarefa.hora}</span>`;
+    lista.appendChild(botao);
+  });
+}
+function iniciarTela(){
+  document.getElementById("data-bloco").innerText = `Dia do bloco: ${formatarDataHoje()}`;
+  renderizarTarefas();
+  atualizarResumo();
+}
+window.addEventListener("load", iniciarTela);
+</script>
+</body>
+</html>

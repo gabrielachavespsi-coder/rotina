@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preparo da Alimentação</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body{
+      font-family: Arial, sans-serif;
+      background-image: url("margaridas.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 18px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .card{
+      width: min(420px, 100%);
+      background: rgba(255,255,255,0.88);
+      border-radius: 22px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      padding: 22px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .title{
+      margin: 0;
+      font-size: 21px;
+      color: #3d6f4c;
+      font-weight: 400;
+      font-family: 'Poppins', sans-serif;
+    }
+    .back{
+      border: none;
+      background: rgba(0,0,0,0.06);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .sectionTitle{
+      margin: 6px 0 0 0;
+      font-size: 14px;
+      color: rgba(0,0,0,0.55);
+      text-align: center;
+    }
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      cursor:pointer;
+      user-select:none;
+    }
+    .left{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .flower{
+      font-size: 20px;
+      width: 26px;
+      text-align:center;
+      flex: 0 0 auto;
+    }
+    .text{
+      font-size: 16px;
+      color: #2e3a46;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .done .text{
+      text-decoration: line-through;
+      color: rgba(46,58,70,0.55);
+    }
+    .progress{
+      margin-top: 4px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.65);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      text-align:center;
+    }
+    .progressLine{
+      font-size: 14px;
+      color: rgba(0,0,0,0.7);
+    }
+    .garden{
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+    .hint{
+      font-size: 12px;
+      color: rgba(0,0,0,0.5);
+    }
+    .actionBtn{
+      border:none;
+      cursor:pointer;
+      padding: 12px 10px;
+      border-radius: 14px;
+      background: rgba(61,111,76,0.14);
+      color:#2f5a3a;
+      font-size: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .statusBox{
+      font-size: 12px;
+      color: rgba(0,0,0,0.6);
+      background: rgba(255,255,255,0.55);
+      border-radius: 12px;
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="topbar">
+      <button class="back" onclick="location.href='gabriela-menu.html'">← Voltar</button>
+      <h1 class="title">🍳 Preparo da Alimentação</h1>
+      <span style="width:76px;"></span>
+    </div>
+
+    <div class="sectionTitle">09h às 11h</div>
+    <div id="list" class="list"></div>
+
+    <div class="progress">
+      <div class="progressLine" id="progressLine">Jardim deste bloco</div>
+      <div class="hint" id="updatedLine"></div>
+      <div class="garden" id="garden">🌱🌱🌱🌱🌱🌱🌱</div>
+      <div class="hint">Toque numa tarefa para a flor abrir 🌼</div>
+      <button class="actionBtn" onclick="clearTasks()">🌱 Limpar marcações</button>
+      <div id="statusBox" class="statusBox"></div>
+    </div>
+  </div>
+
+<script>
+  const STORAGE_KEY = "gabriela_preparo_alimentacao";
+  const TASKS = [
+    "Preparar almoço",
+    "Preparar lanche da tarde",
+    "Preparar lanche da escola",
+    "Preparar jantar",
+    "Preparar ceia"
+  ];
+
+  let done = loadDone();
+
+  function loadDone(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return parsed.done || {};
+    }catch(e){
+      return {};
+    }
+  }
+
+  function saveDone(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      done,
+      updatedAt: Date.now()
+    }));
+  }
+
+  function getSavedState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){
+      return {};
+    }
+  }
+
+  function formatTime(date){
+    const h = String(date.getHours()).padStart(2, "0");
+    const m = String(date.getMinutes()).padStart(2, "0");
+    return `${h}:${m}`;
+  }
+
+  function toggleDone(index){
+    done[index] = !done[index];
+    saveDone();
+    render();
+  }
+
+  function clearTasks(){
+    done = {};
+    saveDone();
+    render();
+  }
+
+  function render(){
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+    let doneCount = 0;
+
+    TASKS.forEach((text, i) => {
+      const row = document.createElement("div");
+      row.className = "item" + (done[i] ? " done" : "");
+      row.onclick = () => toggleDone(i);
+
+      const left = document.createElement("div");
+      left.className = "left";
+
+      const flower = document.createElement("div");
+      flower.className = "flower";
+      flower.textContent = done[i] ? "🌸" : "🌼";
+
+      const label = document.createElement("div");
+      label.className = "text";
+      label.textContent = text;
+
+      left.appendChild(flower);
+      left.appendChild(label);
+      row.appendChild(left);
+      list.appendChild(row);
+
+      if(done[i]) doneCount++;
+    });
+
+    document.getElementById("progressLine").textContent =
+      `Jardim deste bloco • ${doneCount}/${TASKS.length} concluídas`;
+
+    const slots = Math.max(7, TASKS.length);
+    let flowers = "";
+    for(let i = 0; i < slots; i++){
+      flowers += (i < doneCount) ? "🌼" : "🌱";
+    }
+    document.getElementById("garden").textContent = flowers;
+
+    const saved = getSavedState();
+
+    document.getElementById("updatedLine").textContent =
+      saved.updatedAt ? `Última marcação: ${formatTime(new Date(saved.updatedAt))}` : "Ainda não marcou nada neste bloco";
+
+    document.getElementById("statusBox").textContent =
+      doneCount === TASKS.length
+        ? "✅ Bloco concluído."
+        : "As tarefas ficam salvas automaticamente mesmo se você fechar a página.";
+  }
+
+  render();
+</script>
+</body>
+</html>

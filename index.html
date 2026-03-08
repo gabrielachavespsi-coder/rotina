@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jardim da Rotina</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+
+<style>
+
+html, body{
+height:100%;
+margin:0;
+}
+
+body{
+font-family: 'Nunito', sans-serif;
+
+background-image:url("margaridas.jpg.jpeg");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.overlay{
+background:rgba(255,255,255,0.88);
+padding:32px 40px 32px 40px;
+border-radius:22px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.25);
+width:260px;
+
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:18px;
+}
+
+h1{
+font-family:'Poppins', sans-serif;
+font-weight:300;
+color:#3d6f4c;
+font-size:30px;
+margin:0;
+}
+
+.container{
+display:flex;
+flex-direction:column;
+gap:18px;
+align-items:center;
+}
+
+.botao{
+width:200px;
+border-radius:16px;
+padding:14px;
+font-size:16px;
+cursor:pointer;
+box-shadow:0 4px 10px rgba(0,0,0,0.12);
+transition:0.25s;
+text-align:center;
+color:#3d6f4c;
+}
+
+.botao:hover{
+transform:scale(1.05);
+}
+
+.gabi{
+background:#e8f4ff;
+}
+
+.maya{
+background:#ffeef6;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="overlay">
+
+<h1>Jardim da Rotina</h1>
+
+<div class="container">
+
+<div class="botao gabi" onclick="location.href='gabriela-menu.html'">
+👩‍🦱Mamãe Gabriela
+</div>
+
+<div class="botao maya" onclick="location.href='maya-menu.html'">
+👧 Filhotinha Maya
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

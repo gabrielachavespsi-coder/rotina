@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rotina da Maya</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    html, body { height: 100%; margin: 0; }
+
+    body{
+      font-family: Arial, sans-serif;
+      background-image: url("margaridas.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 18px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .card{
+      width: min(420px, 100%);
+      background: rgba(255,255,255,0.88);
+      border-radius: 22px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      padding: 22px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+
+    .title{
+      margin: 0;
+      font-size: 21px;
+      color: #3d6f4c;
+      font-weight: 400;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .back{
+      border: none;
+      background: rgba(0,0,0,0.06);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .tabs{
+      display:flex;
+      gap: 10px;
+      justify-content:center;
+    }
+
+    .tab{
+      flex: 1;
+      border: none;
+      cursor:pointer;
+      padding: 12px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.65);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      font-size: 15px;
+    }
+
+    .tab.active{
+      background: rgba(61,111,76,0.12);
+      outline: 2px solid rgba(61,111,76,0.22);
+    }
+
+    .sectionTitle{
+      margin: 6px 0 0 0;
+      font-size: 14px;
+      color: rgba(0,0,0,0.55);
+      text-align: center;
+    }
+
+    .warningBox{
+      font-size: 12px;
+      color: #6b4b00;
+      background: rgba(255,236,179,0.78);
+      border-radius: 12px;
+      padding: 10px;
+      display:none;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .warningBtn{
+      border:none;
+      cursor:pointer;
+      padding: 10px 10px;
+      border-radius: 12px;
+      background: rgba(107,75,0,0.12);
+      color:#5b4200;
+      font-size: 13px;
+    }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      cursor:pointer;
+      user-select:none;
+    }
+
+    .item.locked{
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .left{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .flower{
+      font-size: 20px;
+      width: 26px;
+      text-align:center;
+      flex: 0 0 auto;
+    }
+
+    .text{
+      font-size: 16px;
+      color: #2e3a46;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .time{
+      font-size: 12px;
+      color: rgba(0,0,0,0.45);
+      flex: 0 0 auto;
+    }
+
+    .done .text{
+      text-decoration: line-through;
+      color: rgba(46,58,70,0.55);
+    }
+
+    .progress{
+      margin-top: 4px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.65);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      text-align:center;
+    }
+
+    .progressLine{
+      font-size: 14px;
+      color: rgba(0,0,0,0.7);
+    }
+
+    .garden{
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+
+    .hint{
+      font-size: 12px;
+      color: rgba(0,0,0,0.5);
+    }
+
+    .completeBtn{
+      border:none;
+      cursor:pointer;
+      padding: 12px 10px;
+      border-radius: 14px;
+      background: rgba(61,111,76,0.14);
+      color:#2f5a3a;
+      font-size: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      display:none;
+    }
+
+    .statusBox{
+      font-size: 12px;
+      color: rgba(0,0,0,0.6);
+      background: rgba(255,255,255,0.55);
+      border-radius: 12px;
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="topbar">
+      <button class="back" onclick="location.href='maya-menu.html'">← Voltar</button>
+      <h1 class="title">🌼 Rotina da Maya</h1>
+      <span style="width:76px;"></span>
+    </div>
+
+    <div class="tabs">
+      <button id="tabMorning" class="tab active" onclick="setTab('morning')">☀️ Manhã</button>
+      <button id="tabNight" class="tab" onclick="setTab('night')">🌙 Noite</button>
+    </div>
+
+    <div id="warningBox" class="warningBox">
+      <div id="warningText"></div>
+      <button class="warningBtn" onclick="completePreviousDay()">✅ Concluir dia anterior</button>
+    </div>
+
+    <div id="sectionTitle" class="sectionTitle"></div>
+    <div id="list" class="list"></div>
+
+    <div class="progress">
+      <div class="progressLine" id="progressLine">Jardim de hoje</div>
+      <div class="hint" id="todayLine"></div>
+      <div class="hint" id="updatedLine"></div>
+      <div class="garden" id="garden">🌱🌱🌱🌱🌱🌱🌱</div>
+      <div class="hint" id="mainHint">Toque numa tarefa para a flor abrir 🌼</div>
+
+      <button id="completeDayBtn" class="completeBtn" onclick="completeDay()">
+        ✅ Concluir o dia
+      </button>
+
+      <div id="statusBox" class="statusBox"></div>
+    </div>
+  </div>
+
+<script>
+  const TASKS = {
+    morning: {
+      title: "☀️ Manhã",
+      items: [
+        { id: "m1", time: "08:00", text: "Ir ao banheiro (xixi)" },
+        { id: "m2", time: "08:05", text: "Escovar os dentes" },
+        { id: "m3", time: "08:10", text: "Lavar o rosto" },
+        { id: "m4", time: "08:12", text: "Beber água morna" },
+        { id: "m5", time: "08:20", text: "Café da manhã perto da janela" },
+        { id: "m6", time: "11:00", text: "Tomar banho" },
+        { id: "m7", time: "11:20", text: "Almoçar" },
+        { id: "m8", time: "11:40", text: "Escovar os dentes" }
+      ]
+    },
+    night: {
+      title: "🌙 Noite",
+      items: [
+        { id: "n1", time: "18:00", text: "Tomar banho" },
+        { id: "n2", time: "18:20", text: "Jantar" },
+        { id: "n3", time: "18:40", text: "Fazer contrato de casa", weekdaysOnly: true },
+        { id: "n4", time: "20:30", text: "Escolher 1 hora tranquila (quebra-cabeça, desenhar, colorir, ler histórias, atividade manual, conversar ou 15 min de filme calmo)" }
+      ]
+    }
+  };
+
+  const STORAGE_KEY = "jardim_rotina_maya_v6";
+  let currentTab = "morning";
+  let store = loadStore();
+  let cycleDayKey = getCycleDayKey();
+
+  function pad(n){
+    return String(n).padStart(2, "0");
+  }
+
+  function getNow(){
+    return new Date();
+  }
+
+  function formatTime(date){
+    return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }
+
+  function formatBRDateFromKey(key){
+    const [year, month, day] = key.split("-");
+    return `${day}/${month}/${year}`;
+  }
+
+  function keyToDate(key){
+    const [year, month, day] = key.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  function dateToKey(date){
+    return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+  }
+
+  function addDaysToKey(key, amount){
+    const d = keyToDate(key);
+    d.setDate(d.getDate() + amount);
+    return dateToKey(d);
+  }
+
+  function isWeekday(key){
+    const d = keyToDate(key);
+    const day = d.getDay();
+    return day >= 1 && day <= 5;
+  }
+
+  function getCycleDayKey(date = new Date()){
+    const d = new Date(date);
+    if (d.getHours() < 7){
+      d.setDate(d.getDate() - 1);
+    }
+    return dateToKey(d);
+  }
+
+  function loadStore(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return { days: {} };
+      const parsed = JSON.parse(raw);
+      if(!parsed.days) parsed.days = {};
+      return parsed;
+    }catch(e){
+      return { days: {} };
+    }
+  }
+
+  function saveStore(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+  }
+
+  function getDayState(key){
+    if(!store.days[key]){
+      store.days[key] = {
+        done: {},
+        updatedAt: null,
+        completed: false,
+        completedAt: null,
+        validation: {
+          morningRule: null,
+          nightRule: null
+        }
+      };
+      saveStore();
+    }
+    if(!store.days[key].validation){
+      store.days[key].validation = {
+        morningRule: null,
+        nightRule: null
+      };
+      saveStore();
+    }
+    return store.days[key];
+  }
+
+  function dayExists(key){
+    return !!store.days[key];
+  }
+
+  function getPreviousDayKey(){
+    return addDaysToKey(cycleDayKey, -1);
+  }
+
+  function refreshCycleDay(){
+    const newKey = getCycleDayKey();
+    if(newKey !== cycleDayKey){
+      cycleDayKey = newKey;
+      render();
+    }
+  }
+
+  function hasPendingPreviousDay(){
+    const previousKey = getPreviousDayKey();
+    if(!dayExists(previousKey)) return false;
+    return !getDayState(previousKey).completed;
+  }
+
+  function getItemsForTab(tab, key){
+    return TASKS[tab].items.filter(item => {
+      if(item.weekdaysOnly && !isWeekday(key)) return false;
+      return true;
+    });
+  }
+
+  function isDone(id){
+    return !!getDayState(cycleDayKey).done[id];
+  }
+
+  function isLocked(){
+    return !!getDayState(cycleDayKey).completed || hasPendingPreviousDay();
+  }
+
+  function toggleDone(id){
+    if(isLocked()) return;
+
+    const ds = getDayState(cycleDayKey);
+    ds.done[id] = !ds.done[id];
+    ds.updatedAt = Date.now();
+    saveStore();
+    render();
+  }
+
+  function setTab(tab){
+    currentTab = tab;
+    document.getElementById("tabMorning").classList.toggle("active", tab === "morning");
+    document.getElementById("tabNight").classList.toggle("active", tab === "night");
+    render();
+  }
+
+  function canCompleteDay(){
+    const now = getNow();
+    return now.getHours() >= 21;
+  }
+
+  function completeDay(){
+    const ds = getDayState(cycleDayKey);
+    if(ds.completed) return;
+    if(!canCompleteDay()) return;
+    if(hasPendingPreviousDay()) return;
+
+    ds.completed = true;
+    ds.completedAt = Date.now();
+    ds.updatedAt = Date.now();
+    saveStore();
+    render();
+  }
+
+  function completePreviousDay(){
+    const previousKey = getPreviousDayKey();
+    if(!dayExists(previousKey)) return;
+
+    const ds = getDayState(previousKey);
+    if(ds.completed) return;
+
+    ds.completed = true;
+    ds.completedAt = Date.now();
+    ds.updatedAt = Date.now();
+    saveStore();
+    render();
+  }
+
+  function render(){
+    refreshCycleDay();
+
+    document.getElementById("tabMorning").classList.toggle("active", currentTab === "morning");
+    document.getElementById("tabNight").classList.toggle("active", currentTab === "night");
+
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+
+    const items = getItemsForTab(currentTab, cycleDayKey);
+    document.getElementById("sectionTitle").textContent = TASKS[currentTab].title;
+
+    items.forEach(it => {
+      const row = document.createElement("div");
+      row.className = "item" + (isDone(it.id) ? " done" : "") + (isLocked() ? " locked" : "");
+      row.onclick = () => toggleDone(it.id);
+
+      const left = document.createElement("div");
+      left.className = "left";
+
+      const flower = document.createElement("div");
+      flower.className = "flower";
+      flower.textContent = isDone(it.id) ? "🌸" : "🌼";
+
+      const text = document.createElement("div");
+      text.className = "text";
+      text.textContent = it.text;
+
+      const time = document.createElement("div");
+      time.className = "time";
+      time.textContent = it.time;
+
+      left.appendChild(flower);
+      left.appendChild(text);
+      row.appendChild(left);
+      row.appendChild(time);
+
+      list.appendChild(row);
+    });
+
+    const doneCount = items.filter(it => isDone(it.id)).length;
+    const total = items.length;
+
+    document.getElementById("progressLine").textContent =
+      `Jardim de hoje • ${doneCount}/${total} concluídas`;
+
+    const slots = Math.max(7, total);
+    let s = "";
+    for(let i = 0; i < slots; i++){
+      s += (i < doneCount) ? "🌼" : "🌱";
+    }
+    document.getElementById("garden").textContent = s;
+
+    const ds = getDayState(cycleDayKey);
+
+    document.getElementById("todayLine").textContent =
+      `Dia da rotina: ${formatBRDateFromKey(cycleDayKey)}`;
+
+    document.getElementById("updatedLine").textContent =
+      ds.updatedAt ? `Última marcação: ${formatTime(new Date(ds.updatedAt))}` : `Ainda não marcou nada hoje`;
+
+    const completeBtn = document.getElementById("completeDayBtn");
+    const mainHint = document.getElementById("mainHint");
+    const statusBox = document.getElementById("statusBox");
+    const warningBox = document.getElementById("warningBox");
+    const warningText = document.getElementById("warningText");
+
+    if(hasPendingPreviousDay()){
+      const previousKey = getPreviousDayKey();
+      warningBox.style.display = "flex";
+      warningText.textContent =
+        `O dia anterior (${formatBRDateFromKey(previousKey)}) ainda não foi concluído. Para liberar o dia de hoje, conclua o anterior primeiro.`;
+
+      completeBtn.style.display = "none";
+      mainHint.textContent = "Hoje está aguardando o fechamento do dia anterior 🌙";
+      statusBox.textContent = "Assim que o dia anterior for concluído, o dia atual será liberado.";
+      return;
+    } else {
+      warningBox.style.display = "none";
+    }
+
+    if(ds.completed){
+      completeBtn.style.display = "none";
+      mainHint.textContent = "Dia concluído. A página ficará aguardando o próximo dia 🌙";
+      statusBox.textContent =
+        `✅ Dia fechado às ${formatTime(new Date(ds.completedAt))}. Tudo será liberado novamente às 07h do próximo ciclo.`;
+    } else {
+      if(canCompleteDay()){
+        completeBtn.style.display = "block";
+        mainHint.textContent = "Agora já pode concluir o dia 🌼";
+        statusBox.textContent = "Depois de clicar em “Concluir o dia”, as tarefas ficam congeladas até 07h.";
+      } else {
+        completeBtn.style.display = "none";
+        mainHint.textContent = "Toque numa tarefa para a flor abrir 🌼";
+        statusBox.textContent = "O botão “Concluir o dia” aparece somente a partir das 21h.";
+      }
+    }
+  }
+
+  setInterval(() => {
+    refreshCycleDay();
+    render();
+  }, 30000);
+
+  render();
+</script>
+</body>
+</html>

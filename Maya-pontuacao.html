@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pontuação da Maya</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    html, body { height: 100%; margin: 0; }
+
+    body{
+      font-family: Arial, sans-serif;
+      background-image: url("margaridas.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 18px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .card{
+      width: min(420px, 100%);
+      background: rgba(255,255,255,0.88);
+      border-radius: 22px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      padding: 22px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .title{
+      margin:0;
+      font-size:21px;
+      color:#3d6f4c;
+      font-weight:400;
+      font-family:'Poppins', sans-serif;
+    }
+
+    .back{
+      border:none;
+      background: rgba(0,0,0,0.06);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .hero{
+      border-radius: 16px;
+      background: rgba(255,255,255,0.72);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      text-align:center;
+    }
+
+    .heroTitle{
+      font-size: 15px;
+      color:#3d6f4c;
+      font-family:'Poppins', sans-serif;
+    }
+
+    .heroMoney{
+      font-size: 28px;
+      color:#2e3a46;
+      font-weight: 700;
+    }
+
+    .heroHint{
+      font-size: 12px;
+      color: rgba(0,0,0,0.55);
+    }
+
+    .grid{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .box{
+      border-radius: 16px;
+      background: rgba(255,255,255,0.70);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 14px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .boxTitle{
+      font-size: 14px;
+      color:#3d6f4c;
+      text-align:center;
+      font-family:'Poppins', sans-serif;
+    }
+
+    .line{
+      font-size: 13px;
+      color:#2e3a46;
+      line-height:1.45;
+    }
+
+    .hint{
+      font-size: 12px;
+      color: rgba(0,0,0,0.55);
+    }
+
+    .navRow{
+      display:flex;
+      gap:8px;
+    }
+
+    .smallBtn{
+      flex:1;
+      border:none;
+      cursor:pointer;
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.06);
+      font-size: 13px;
+    }
+
+    .ruleRow{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      padding:10px;
+      border-radius:12px;
+      background: rgba(255,255,255,0.58);
+    }
+
+    .choiceRow{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .choiceBtn{
+      border:none;
+      cursor:pointer;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(61,111,76,0.10);
+      color:#2f5a3a;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="topbar">
+      <button class="back" onclick="location.href='maya-menu.html'">← Voltar</button>
+      <h1 class="title">💰 Pontuação da Maya</h1>
+      <span style="width:76px;"></span>
+    </div>
+
+    <div class="hero">
+      <div class="heroTitle">Moedas acumuladas hoje</div>
+      <div class="heroMoney" id="todayMoneyBig">R$ 0,00</div>
+      <div class="heroHint">Esse valor pode mudar conforme a semana, o mês e a validação das regras.</div>
+    </div>
+
+    <div class="grid">
+      <div class="box">
+        <div class="boxTitle">Resumo da pontuação</div>
+        <div class="line" id="todayLine"></div>
+        <div class="line" id="weekLine"></div>
+        <div class="line" id="monthLine"></div>
+        <div class="hint">Cada tarefa vale R$ 0,10. Se a semana ou o mês ficarem abaixo de 70%, perde 50% do acumulado daquele período.</div>
+      </div>
+
+      <div class="box">
+        <div class="boxTitle">Somente mamãe</div>
+
+        <div class="navRow">
+          <button class="smallBtn" onclick="moveSelectedDay(-1)">← Dia anterior</button>
+          <button class="smallBtn" onclick="resetSelectedDayToCurrent()">Hoje</button>
+          <button class="smallBtn" onclick="moveSelectedDay(1)">Próximo dia →</button>
+        </div>
+
+        <div class="line" id="selectedDayLine"></div>
+        <div class="hint">Aqui você valida as regras da diversão e da brincadeira.</div>
+
+        <div class="ruleRow">
+          <div class="line"><strong>Regra da manhã (09h às 11h)</strong></div>
+          <div class="line" id="morningRuleStatus"></div>
+          <div class="choiceRow">
+            <button class="choiceBtn" onclick="setRule('morningRule', true)">Respeitou</button>
+            <button class="choiceBtn" onclick="setRule('morningRule', false)">Quebrou a regra</button>
+            <button class="choiceBtn" onclick="setRule('morningRule', null)">Limpar</button>
+          </div>
+        </div>
+
+        <div class="ruleRow">
+          <div class="line"><strong>Regra da noite (18:30h às 20:30h)</strong></div>
+          <div class="line" id="nightRuleStatus"></div>
+          <div class="choiceRow">
+            <button class="choiceBtn" onclick="setRule('nightRule', true)">Respeitou</button>
+            <button class="choiceBtn" onclick="setRule('nightRule', false)">Quebrou a regra</button>
+            <button class="choiceBtn" onclick="setRule('nightRule', null)">Limpar</button>
+          </div>
+        </div>
+
+        <div class="line" id="selectedDaySummaryTitle"></div>
+        <div class="line" id="selectedDaySummaryTasks"></div>
+        <div class="line" id="selectedDaySummaryMoney"></div>
+        <div class="hint">Se uma das regras for quebrada, o dia perde 50% das moedas.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const STORAGE_KEY = "jardim_rotina_maya_v6";
+  const TASK_VALUE_CENTS = 10;
+  const WEEK_TOTAL_TASKS = 82;
+  const MONTH_TOTAL_TASKS = 328;
+
+  let store = loadStore();
+  let selectedDayKey = getCycleDayKey();
+
+  function pad(n){
+    return String(n).padStart(2, "0");
+  }
+
+  function formatMoneyFromCents(cents){
+    return (cents / 100).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    });
+  }
+
+  function keyToDate(key){
+    const [year, month, day] = key.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  function dateToKey(date){
+    return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+  }
+
+  function addDaysToKey(key, amount){
+    const d = keyToDate(key);
+    d.setDate(d.getDate() + amount);
+    return dateToKey(d);
+  }
+
+  function formatBRDateFromKey(key){
+    const [year, month, day] = key.split("-");
+    return `${day}/${month}/${year}`;
+  }
+
+  function getCycleDayKey(date = new Date()){
+    const d = new Date(date);
+    if (d.getHours() < 7){
+      d.setDate(d.getDate() - 1);
+    }
+    return dateToKey(d);
+  }
+
+  function loadStore(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return { days: {} };
+      const parsed = JSON.parse(raw);
+      if(!parsed.days) parsed.days = {};
+      return parsed;
+    }catch(e){
+      return { days: {} };
+    }
+  }
+
+  function saveStore(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+  }
+
+  function getDayState(key){
+    if(!store.days[key]){
+      store.days[key] = {
+        done: {},
+        updatedAt: null,
+        completed: false,
+        completedAt: null,
+        validation: {
+          morningRule: null,
+          nightRule: null
+        }
+      };
+      saveStore();
+    }
+    if(!store.days[key].validation){
+      store.days[key].validation = {
+        morningRule: null,
+        nightRule: null
+      };
+      saveStore();
+    }
+    return store.days[key];
+  }
+
+  function countRawTasksForDay(key){
+    const ds = getDayState(key);
+    return Object.values(ds.done).filter(Boolean).length;
+  }
+
+  function getDayPenaltyMultiplier(key){
+    const validation = getDayState(key).validation || {};
+    if(validation.morningRule === false || validation.nightRule === false){
+      return 0.5;
+    }
+    return 1;
+  }
+
+  function countAdjustedTaskCreditsForDay(key){
+    return countRawTasksForDay(key) * getDayPenaltyMultiplier(key);
+  }
+
+  function getWeekStartKey(key){
+    const d = keyToDate(key);
+    const day = d.getDay();
+    const diff = day === 0 ? 6 : day - 1;
+    d.setDate(d.getDate() - diff);
+    return dateToKey(d);
+  }
+
+  function getMonthStartKey(key){
+    const d = keyToDate(key);
+    d.setDate(1);
+    return dateToKey(d);
+  }
+
+  function countAdjustedTasksInPeriod(startKey, endKey){
+    let total = 0;
+    let current = startKey;
+
+    while(current <= endKey){
+      total += countAdjustedTaskCreditsForDay(current);
+      current = addDaysToKey(current, 1);
+    }
+
+    return total;
+  }
+
+  function calculatePeriodMoney(adjustedTasks, totalPossibleTasks){
+    const percent = totalPossibleTasks > 0 ? (adjustedTasks / totalPossibleTasks) * 100 : 0;
+    let cents = Math.round(adjustedTasks * TASK_VALUE_CENTS);
+
+    if(percent < 70){
+      cents = Math.round(cents * 0.5);
+    }
+
+    return {
+      percent: Math.floor(percent),
+      cents
+    };
+  }
+
+  function moveSelectedDay(amount){
+    selectedDayKey = addDaysToKey(selectedDayKey, amount);
+    render();
+  }
+
+  function resetSelectedDayToCurrent(){
+    selectedDayKey = getCycleDayKey();
+    render();
+  }
+
+  function setRule(ruleName, value){
+    const ds = getDayState(selectedDayKey);
+    ds.validation[ruleName] = value;
+    saveStore();
+    render();
+  }
+
+  function formatRuleValue(value){
+    if(value === true) return "Respeitou";
+    if(value === false) return "Quebrou a regra";
+    return "Ainda não validado";
+  }
+
+  function render(){
+    const currentCycleDay = getCycleDayKey();
+
+    const todayAdjusted = countAdjustedTaskCreditsForDay(currentCycleDay);
+    const todayCents = Math.round(todayAdjusted * TASK_VALUE_CENTS);
+
+    const weekStart = getWeekStartKey(currentCycleDay);
+    const monthStart = getMonthStartKey(currentCycleDay);
+
+    const weekAdjusted = countAdjustedTasksInPeriod(weekStart, currentCycleDay);
+    const monthAdjusted = countAdjustedTasksInPeriod(monthStart, currentCycleDay);
+
+    const weekInfo = calculatePeriodMoney(weekAdjusted, WEEK_TOTAL_TASKS);
+    const monthInfo = calculatePeriodMoney(monthAdjusted, MONTH_TOTAL_TASKS);
+
+    document.getElementById("todayMoneyBig").textContent = formatMoneyFromCents(todayCents);
+
+    document.getElementById("todayLine").textContent =
+      `Hoje: ${todayAdjusted.toFixed(1).replace(".0","")} tarefas equivalentes • ${formatMoneyFromCents(todayCents)}`;
+
+    document.getElementById("weekLine").textContent =
+      `Semana: ${weekAdjusted.toFixed(1).replace(".0","")}/${WEEK_TOTAL_TASKS} • ${weekInfo.percent}% • ${formatMoneyFromCents(weekInfo.cents)}`;
+
+    document.getElementById("monthLine").textContent =
+      `Mês: ${monthAdjusted.toFixed(1).replace(".0","")}/${MONTH_TOTAL_TASKS} • ${monthInfo.percent}% • ${formatMoneyFromCents(monthInfo.cents)}`;
+
+    const selectedState = getDayState(selectedDayKey);
+
+    document.getElementById("selectedDayLine").textContent =
+      `Dia selecionado: ${formatBRDateFromKey(selectedDayKey)}`;
+
+    document.getElementById("morningRuleStatus").textContent =
+      `Status: ${formatRuleValue(selectedState.validation.morningRule)}`;
+
+    document.getElementById("nightRuleStatus").textContent =
+      `Status: ${formatRuleValue(selectedState.validation.nightRule)}`;
+
+    const raw = countRawTasksForDay(selectedDayKey);
+    const adjusted = countAdjustedTaskCreditsForDay(selectedDayKey);
+    const cents = Math.round(adjusted * TASK_VALUE_CENTS);
+
+    document.getElementById("selectedDaySummaryTitle").textContent = "Resumo do dia:";
+    document.getElementById("selectedDaySummaryTasks").textContent =
+      `${raw} tarefas marcadas • ${adjusted.toFixed(1).replace(".0","")} tarefas equivalentes`;
+    document.getElementById("selectedDaySummaryMoney").textContent =
+      `${formatMoneyFromCents(cents)}`;
+  }
+
+  render();
+</script>
+</body>
+</html>
