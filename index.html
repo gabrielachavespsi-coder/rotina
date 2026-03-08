@@ -9,6 +9,10 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f4f7f1">
+<link rel="apple-touch-icon" href="icon-512.png">
+
 <style>
 
 html, body{
@@ -18,17 +22,68 @@ margin:0;
 
 body{
 font-family: 'Nunito', sans-serif;
-
 background-image:url("margaridas.jpg.jpeg");
 background-size:cover;
 background-position:center;
 background-repeat:no-repeat;
-
 display:flex;
 justify-content:center;
 align-items:center;
 }
 
+/* TELA DE ABERTURA */
+#splash-screen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(to bottom, #f4f7f1, #e8f0df);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+opacity:1;
+transition:opacity 0.8s ease;
+}
+
+#splash-screen.hide{
+opacity:0;
+pointer-events:none;
+}
+
+.splash-content{
+text-align:center;
+padding:24px;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.splash-icon{
+width:120px;
+height:120px;
+border-radius:28px;
+box-shadow:0 6px 18px rgba(0,0,0,0.12);
+margin-bottom:20px;
+}
+
+.splash-content h1{
+margin:0;
+font-family:'Poppins', sans-serif;
+font-size:2rem;
+font-weight:300;
+color:#5f7552;
+}
+
+.splash-content p{
+margin-top:10px;
+font-size:1rem;
+color:#7d8f72;
+font-family:'Poppins', sans-serif;
+}
+
+/* TELA PRINCIPAL */
 .overlay{
 background:rgba(255,255,255,0.88);
 padding:32px 40px 32px 40px;
@@ -36,14 +91,13 @@ border-radius:22px;
 text-align:center;
 box-shadow:0 10px 25px rgba(0,0,0,0.25);
 width:260px;
-
 display:flex;
 flex-direction:column;
 align-items:center;
 gap:18px;
 }
 
-h1{
+.overlay h1{
 font-family:'Poppins', sans-serif;
 font-weight:300;
 color:#3d6f4c;
@@ -85,8 +139,15 @@ background:#ffeef6;
 </style>
 </head>
 
-
 <body>
+
+<div id="splash-screen">
+  <div class="splash-content">
+    <img src="icon-512.png" alt="Ícone Jardim da Rotina" class="splash-icon">
+    <h1>Jardim da Rotina</h1>
+    <p>Florescendo hábitos com amor</p>
+  </div>
+</div>
 
 <div class="overlay">
 
@@ -95,7 +156,7 @@ background:#ffeef6;
 <div class="container">
 
 <div class="botao gabi" onclick="location.href='gabriela-menu.html'">
-👩‍🦱Mamãe Gabriela
+👩‍🦱 Mamãe Gabriela
 </div>
 
 <div class="botao maya" onclick="location.href='maya-menu.html'">
@@ -105,6 +166,14 @@ background:#ffeef6;
 </div>
 
 </div>
+
+<script>
+window.addEventListener("load", function() {
+  setTimeout(function() {
+    document.getElementById("splash-screen").classList.add("hide");
+  }, 1800);
+});
+</script>
 
 </body>
 

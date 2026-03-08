@@ -1,0 +1,15 @@
+{
+  "name": "Rotina Gabriela e Maya",
+  "short_name": "Rotina",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f4f7f1",
+  "theme_color": "#f4f7f1",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
